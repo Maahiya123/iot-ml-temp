@@ -5,7 +5,7 @@ from main import generateAI
 import pickle
 import numpy as np
 
-genrateAI()
+generateAI()
 ai = pickle.load(open('model.pkl', 'rb'))
 
 app = Flask(__name__)
