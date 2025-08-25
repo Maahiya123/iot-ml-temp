@@ -1,5 +1,7 @@
 from flask import Flask, request
-from main import genrateAI
+from main import generateAI
+
+
 import pickle
 import numpy as np
 
