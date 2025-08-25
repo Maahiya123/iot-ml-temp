@@ -1,11 +1,8 @@
-from flask import Flask, request
-from main import generateAI
-
-
+from flask import Flask, request, jsonify
 import pickle
 import numpy as np
 
-genrateAI()
+# Load pre-trained model (make sure model.pkl exists!)
 ai = pickle.load(open('model.pkl', 'rb'))
 
 app = Flask(__name__)
@@ -16,12 +13,18 @@ def home():
 
 @app.route('/predict', methods=['GET'])
 def predict():
-    temp = request.args.get('temp')
-    temp = float(temp)
-    data = np.array([[temp]])
-    result = ai.predict(data)
-    result = result[0]
-    return (result)
+    try:
+        temp = request.args.get('temp')
+        if temp is None:
+            return jsonify({"error": "Missing 'temp' parameter"}), 400
 
-if (__name__ == "__main__"):
-    app.run(host='0.0.0.0',port=5000,debug=True)
+        temp = float(temp)
+        data = np.array([[temp]])
+        result = ai.predict(data)[0]
+        return jsonify({"prediction": str(result)})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
